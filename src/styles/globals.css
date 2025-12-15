@@ -1,0 +1,82 @@
+@import "tailwindcss";
+@config "../../tailwind.config.ts";
+
+@layer base {
+    :root {
+        --background: #f8fafc;
+        /* slate-50 */
+        --foreground: #0f172a;
+        /* slate-900 */
+
+        /* Font Variables mapped from next/font */
+        --font-heading: var(--font-geist-sans);
+        --font-body: var(--font-geist-sans);
+        --font-mono: var(--font-geist-mono);
+    }
+
+    /* Dark mode overrides if needed later */
+    @media (prefers-color-scheme: dark) {
+        :root {
+            /* --background: #0f172a; */
+            /* --foreground: #f8fafc; */
+        }
+    }
+
+    body {
+        background-color: var(--background);
+        color: var(--foreground);
+        @apply font-sans antialiased;
+    }
+}
+
+@layer components {
+
+    /* Example component classes */
+    .btn {
+        @apply inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-white;
+    }
+
+    .btn-primary {
+        @apply bg-primary text-white hover:bg-primary/90;
+    }
+
+    .btn-secondary {
+        @apply bg-secondary text-white hover:bg-secondary/80;
+    }
+
+    .card {
+        @apply rounded-lg border border-slate-200 bg-white shadow-sm;
+    }
+
+    .job-description {
+        @apply text-slate-600 text-[15px] leading-relaxed;
+    }
+    .job-description strong, .job-description b {
+        @apply font-semibold text-slate-800;
+    }
+    .job-description p {
+        @apply mb-4;
+    }
+    .job-description ul {
+        @apply list-disc ml-5 mb-4 space-y-1;
+    }
+    .job-description ol {
+        @apply list-decimal ml-5 mb-4 space-y-1;
+    }
+    .job-description li {
+        @apply pl-1;
+    }
+    .job-description h1, .job-description h2, .job-description h3, .job-description h4 {
+        @apply font-bold text-slate-800 mt-6 mb-3;
+    }
+    .job-description h1 { @apply text-2xl; }
+    .job-description h2 { @apply text-xl; }
+    .job-description h3 { @apply text-lg; }
+    .job-description a {
+        @apply text-pink-600 hover:text-pink-700 underline underline-offset-2;
+    }
+}
+
+@layer utilities {
+    /* Custom utilities if needed */
+}

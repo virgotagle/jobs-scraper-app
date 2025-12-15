@@ -39,3 +39,20 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+jobs-scraper-app.code-workspace
+
+# Logs
+*.log
+
+# Test & Lint Output
+*_output.txt
+*_output.log
+lint_output.txt
+test_output.txt
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
