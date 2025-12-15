@@ -2,30 +2,6 @@
 
 A modern, responsive job board application built with [Next.js 16](https://nextjs.org) and React 19. This application provides a clean interface for browsing, searching, and managing job listings.
 
-
-## 📸 Gallery
-
-<div align="center">
-  <h3>Desktop Dashboard</h3>
-  <img src="public/app-screenshot.png" alt="Desktop Dashboard" width="800"/>
-</div>
-
-<br/>
-
-<div align="center">
-  <h3>Desktop Job Details</h3>
-  <img src="public/app-desktop-details.png" alt="Desktop Job Details" width="800"/>
-</div>
-
-<br/>
-
-<h3 align="center">Mobile View</h3>
-<div align="center" style="display: flex; justify-content: center; gap: 20px;">
-  <img src="public/app-mobile-home.png" alt="Mobile Home" height="600"/>
-  <img src="public/app-mobile-details.png" alt="Mobile Job Details" height="600"/>
-</div>
-
-
 ## 🚀 Features
 
 - **Job Browsing**: detailed list of job opportunities with company logos, locations, and salary information.
@@ -102,6 +78,28 @@ A modern, responsive job board application built with [Next.js 16](https://nextj
 ## 📚 API Reference
 
 For detailed documentation on the backend API endpoints, schemas, and authentication, please refer to the [Jobs Scraper API Repository](https://github.com/virgotagle/jobs-scraper-api).
+
+## 📸 Gallery
+
+<div align="center">
+  <h3>Desktop Dashboard</h3>
+  <img src="public/app-screenshot.png" alt="Desktop Dashboard" width="800"/>
+</div>
+
+<br/>
+
+<div align="center">
+  <h3>Desktop Job Details</h3>
+  <img src="public/app-desktop-details.png" alt="Desktop Job Details" width="800"/>
+</div>
+
+<br/>
+
+<h3 align="center">Mobile View</h3>
+<div align="center" style="display: flex; justify-content: center; gap: 20px;">
+  <img src="public/app-mobile-home.png" alt="Mobile Home" height="600"/>
+  <img src="public/app-mobile-details.png" alt="Mobile Job Details" height="600"/>
+</div>
 
 ---
 
