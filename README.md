@@ -81,20 +81,20 @@ Runs tests against the backend. Ensure `NEXT_PUBLIC_API_URL` points to a running
 
 <div align="center">
   <h3>Desktop Dashboard</h3>
-  <img src="public/app-screenshot.png" alt="Desktop Dashboard" width="800"/>
+  <img src="./public/app-screenshot.png" alt="Desktop Dashboard" width="800"/>
 </div>
 
 <br/>
 
 <div align="center">
   <h3>Desktop Job Details</h3>
-  <img src="public/app-desktop-details.png" alt="Desktop Job Details" width="800"/>
+  <img src="./public/app-desktop-details.png" alt="Desktop Job Details" width="800"/>
 </div>
 
 <br/>
 
 <h3 align="center">Mobile View</h3>
 <div align="center" style="display: flex; justify-content: center; gap: 20px;">
-  <img src="public/app-mobile-home.png" alt="Mobile Home" height="600"/>
-  <img src="public/app-mobile-details.png" alt="Mobile Job Details" height="600"/>
+  <img src="./public/app-mobile-home.png" alt="Mobile Home" height="600"/>
+  <img src="./public/app-mobile-details.png" alt="Mobile Job Details" height="600"/>
 </div>
