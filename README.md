@@ -4,9 +4,25 @@ Frontend client that consumes the [jobs-scraper-api](https://github.com/virgotag
 
 ## Architecture
 
-The application follows a pragmatic separation of concerns:
+The application follows a pragmatic separation of concerns, designed for scalability and maintainability:
 
-- **Service Layer**: All HTTP communication is centralized in `src/services/`. The `api.ts` module acts as a facade over `fetch`, handling base URLs, headers, and standardized error parsing. Components do not make API calls directly.
+### Core Framework
+- **Next.js 15 App Router**: Leveraging the latest Next.js features, including nested layouts and server components, located in `src/app/`.
+- **TypeScript**: Strict type safety ensures reliability across the entire codebase.
+
+### State Management & Data Flow
+- **Custom Hooks**: specialized hooks like `useJobs` and `useFavorite` encapsulate data fetching logic and local state management.
+- **Optimistic Updates**: The UI implements optimistic UI patterns (e.g., toggling favorites) to ensure the interface feels instant and responsive, handling rollbacks automatically on error.
+- **Service Layer**: All HTTP communication is centralized in `src/services/`. The `api.ts` module acts as a facade over `fetch`, handling:
+    - Base URL configuration
+    - Automatic `X-API-Key` injection for authentication
+    - Standardized error parsing and handling
+- **Search Strategy**: Client-side debouncing (implemented in `useJobSearch`) minimizes unnecessary API calls during user input.
+
+### Design System
+- **Semantic Styling**: The project uses **Tailwind CSS** with a custom configuration (`tailwind.config.ts`) that defines semantic color tokens (e.g., `primary`, `background.paper`, `status.success`). This abstracts raw color values, making theming and dark mode support seamless and consistent.
+
+### Testing Strategy
 - **Mock Service Worker (MSW)**: Unit tests intercept network requests using MSW handlers (`src/__tests__/mocks/`), allowing reliable testing without a running backend.
 - **Integration Testing**: Dedicated integration tests run against the live API (or can be configured to use mocks) to verify contract implementations.
 
