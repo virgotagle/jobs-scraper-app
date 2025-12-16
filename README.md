@@ -76,6 +76,8 @@ pnpm run test:unit
 Runs tests against the backend. Ensure `NEXT_PUBLIC_API_URL` points to a running instance.
 
 ```bash
+pnpm run test:integration
+```
 
 ## Gallery
 
