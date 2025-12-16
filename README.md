@@ -1,85 +1,83 @@
-# Jobs Scraper App
+# Jobs Scraper Client
 
-A modern, responsive job board application built with [Next.js 16](https://nextjs.org) and React 19. This application provides a clean interface for browsing, searching, and managing job listings.
+Frontend client that consumes the [jobs-scraper-api](https://github.com/virgotagle/jobs-scraper-api) to display, filter, and manage job listings. Built with Next.js 15, Tailwind CSS, and TypeScript.
 
-## 🚀 Features
+## Architecture
 
-- **Job Browsing**: detailed list of job opportunities with company logos, locations, and salary information.
-- **Advanced Search**: Real-time search by keyword to find specific roles.
-- **Filtering**: deeply integrated filtering by:
-  - Classification & Sub-classification
-  - Work Arrangement (Remote, Hybrid, On-site)
-- **Sorting**: sort jobs by posting date, relevance, or company name.
-- **Pagination**: Efficient server-side and client-side pagination handling.
-- **Favorites System**: Save interesting jobs for later review (requires authentication).
-- **Responsive Design**: Fully optimized for mobile, tablet, and desktop devices.
-- **Job Details**: Rich text view of full job descriptions.
+The application follows a pragmatic separation of concerns:
 
-## 🛠️ Tech Stack
+- **Service Layer**: All HTTP communication is centralized in `src/services/`. The `api.ts` module acts as a facade over `fetch`, handling base URLs, headers, and standardized error parsing. Components do not make API calls directly.
+- **Mock Service Worker (MSW)**: Unit tests intercept network requests using MSW handlers (`src/__tests__/mocks/`), allowing reliable testing without a running backend.
+- **Integration Testing**: Dedicated integration tests run against the live API (or can be configured to use mocks) to verify contract implementations.
 
-- **Framework**: [Next.js 16](https://nextjs.org/) (App Router)
-- **Language**: [TypeScript](https://www.typescriptlang.org/)
-- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/)
-- **Icons**: [Lucide React](https://lucide.dev/)
-- **Testing**: [Vitest](https://vitest.dev/) & React Testing Library
-- **State Management**: React Hooks (`use-jobs`, `use-job-search`)
+## Directory Structure
 
-## 🏁 Getting Started
+```ascii
+jobs-scraper-app/
+├── public/                 # Static assets
+├── src/
+│   ├── __tests__/          # Vitest configurations and test files
+│   │   ├── integration/    # Tests running against live/mocked API
+│   │   └── mocks/          # MSW request handlers
+│   ├── app/                # Next.js App Router pages and layouts
+│   ├── components/         # Reusable UI components
+│   ├── hooks/              # Custom React hooks (e.g., usage of services)
+│   ├── services/           # API client layer (Http Client)
+│   ├── styles/             # Global CSS and Tailwind directives
+│   └── types/              # TypeScript interfaces for API responses
+├── .env.local              # Local environment overrides
+├── vitest.config.ts        # Unit test configuration
+└── vitest.integration.config.ts # Integration test configuration
+```
+
+## Environment Variables
+
+Configuration is handled via environment variables.
+
+| Variable | Default (Fallback) | Description |
+| :--- | :--- | :--- |
+| `NEXT_PUBLIC_API_URL` | `http://127.0.0.1:8000` | Base URL of the Python backend API. |
+| `NEXT_PUBLIC_API_KEY` | `''` | API Key for authenticated endpoints. |
+
+## Development
 
 ### Prerequisites
 
-- Node.js 18+ installed
-- valid API backend running (default: `http://localhost:8000`)
+- Node.js (Latest LTS recommended)
+- pnpm (Project uses `pnpm-lock.yaml`)
+- Running instance of the `jobs-scraper-api` (for full functionality)
 
 ### Installation
 
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   cd jobs-scraper-app
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   # or
-   pnpm install
-   ```
-
-3. Configure Environment (Optional):
-   Create a `.env.local` file if your API URL differs from default:
-   ```env
-   NEXT_PUBLIC_API_URL=http://localhost:8000
-   NEXT_PUBLIC_API_KEY=your_api_key_optional
-   ```
-
-4. Run the development server:
-   ```bash
-   npm run dev
-   ```
-
-5. Open [http://localhost:3000](http://localhost:3000) with your browser.
-
-## 📁 Project Structure
-
-```
-├── public/              # Static assets (images, icons)
-├── src/
-│   ├── app/             # Next.js App Router pages
-│   ├── components/      # Reusable UI components (JobCard, Sidebar, etc.)
-│   ├── hooks/           # Custom React hooks for data fetching
-│   ├── services/        # API service layer
-│   ├── styles/          # Global styles and Tailwind config
-│   ├── types/           # TypeScript interfaces (Job, API)
-│   └── __tests__/       # Unit and Integration tests
-└── ...config files
+```bash
+pnpm install
 ```
 
-## 📚 API Reference
+### Running the App
 
-For detailed documentation on the backend API endpoints, schemas, and authentication, please refer to the [Jobs Scraper API Repository](https://github.com/virgotagle/jobs-scraper-api).
+Start the development server:
 
-## 📸 Gallery
+```bash
+pnpm run dev
+```
+
+The application will be available at `http://localhost:3000`.
+
+## Testing
+
+**Unit Tests**
+Runs tests using MSW to mock network requests. No backend required.
+
+```bash
+pnpm run test:unit
+```
+
+**Integration Tests**
+Runs tests against the backend. Ensure `NEXT_PUBLIC_API_URL` points to a running instance.
+
+```bash
+
+## Gallery
 
 <div align="center">
   <h3>Desktop Dashboard</h3>
@@ -100,7 +98,3 @@ For detailed documentation on the backend API endpoints, schemas, and authentica
   <img src="public/app-mobile-home.png" alt="Mobile Home" height="600"/>
   <img src="public/app-mobile-details.png" alt="Mobile Job Details" height="600"/>
 </div>
-
----
-
-Built with Next.js 16.
