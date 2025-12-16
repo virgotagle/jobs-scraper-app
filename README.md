@@ -95,6 +95,16 @@ Runs tests against the backend. Ensure `NEXT_PUBLIC_API_URL` points to a running
 pnpm run test:integration
 ```
 
+## Continuous Integration
+
+The project uses **GitHub Actions** for Continuous Integration. The pipeline is defined in `.github/workflows/ci.yml` and is triggered on pushes and pull requests to the `main` branch.
+
+**Workflow Steps:**
+1.  **Setup**: Configures Node.js 20 and pnpm 9.
+2.  **Lint**: Runs `eslint` to check for code quality issues.
+3.  **Test**: Executes unit tests via `vitest`.
+4.  **Build**: Verifies the application builds successfully with `next build`.
+
 ## Gallery
 
 <div align="center">
