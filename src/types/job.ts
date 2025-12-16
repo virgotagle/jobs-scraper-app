@@ -44,16 +44,4 @@ export interface JobSearchParams {
   limit?: number;
 }
 
-export interface FavoriteJobResponse {
-  id: string;
-  job_id: string;
-  notes?: string;
-}
 
-export interface FavoriteJobCreate {
-  notes?: string;
-}
-
-export interface FavoriteStatusResponse {
-  is_favorited: boolean;
-}

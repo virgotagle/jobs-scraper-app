@@ -8,7 +8,7 @@ import {
     FavoriteJobResponse,
     FavoriteJobCreate,
     FavoriteStatusResponse
-} from '../types/job';
+} from '../types';
 
 export const jobsService = {
     getAll: (params?: JobQueryParams) => {
