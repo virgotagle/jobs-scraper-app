@@ -57,9 +57,9 @@ jobs-scraper-app/
 ```mermaid
 graph TD
     User[User Interaction] --> Components[React Components]
-    Components --> Hooks[Custom Hooks (useJobs)]
-    Hooks --> Service[Service Layer (jobs.service)]
-    Service --> API[API Client (fetchWrapper)]
+    Components --> Hooks["Custom Hooks (useJobs)"]
+    Hooks --> Service["Service Layer (jobs.service)"]
+    Service --> API["API Client (fetchWrapper)"]
     API --> Backend[External Python API]
 
     subgraph "Frontend State"
