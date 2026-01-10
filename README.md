@@ -1,109 +1,240 @@
 # Jobs Scraper Client
 
-Frontend client that consumes the [jobs-scraper-api](https://github.com/virgotagle/jobs-scraper-api) to display, filter, and manage job listings. Built with Next.js 15, Tailwind CSS, and TypeScript.
+[![CI](https://github.com/virgotagle/jobs-scraper-app/actions/workflows/ci.yml/badge.svg)](https://github.com/virgotagle/jobs-scraper-app/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Next.js](https://img.shields.io/badge/Next.js-16.0-black)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
+
+> A Next.js frontend application that aggregates and displays job listings by consuming the [jobs-scraper-api](https://github.com/virgotagle/jobs-scraper-api), featuring optimistic UI updates and efficient client-side caching for a responsive user experience.
+
+**Built with**: ⚛️ React 19 • ▲ Next.js 16 • 🔷 TypeScript 5 • 🍃 Tailwind CSS 4
+
+## Overview
+
+**Jobs Scraper Client** solves the problem of fragmented job searching by providing a unified, responsive dashboard for viewing aggregated listings. Unlike standard scraping viewers that are often static or slow, this application implements a dynamic, app-like experience with instant feedback.
+
+The system implements a **Client-Server** architecture where the Next.js frontend acts as the consumer of a separate Python-based API. It strictly separates concerns between the UI (Components), Logic (Hooks), and Data Access (Services), enabling modular development and testing.
+
+Key design decisions include:
+
+- **Service Layer Facade**: All API interactions are routed through a typed service layer (`api.ts`), ensuring consistent error handling and authentication injection.
+- **Optimistic UI Updates**: User actions like "favoriting" a job update the UI immediately (`useFavorite`), automatically reverting if the server request fails, creating a perceived zero-latency experience.
+- **Mock-First Testing**: Integration tests run against Mock Service Worker (MSW) handlers (`src/__tests__/mocks/`), allowing the frontend to be tested in isolation without spinning up the backend.
+
+## Features
+
+### Core Experience
+
+- ✅ **Responsive Dashboard**: Mobile-first layout adaptable to any screen size.
+- ✅ **Real-time Search**: Debounced search functionality (`useJobSearch`) to filter listings efficiently.
+- ✅ **Job Management**: Detailed views and "favoriting" system with persistence.
+
+### Technical Capabilities
+
+- ✅ **Strict Type Safety**: End-to-end type definitions for all API responses.
+- ✅ **Resilient Data Fetching**: Centralized fetch wrapper with automatic error parsing.
+- 🚧 **Advanced Filtering**: Multi-faceted filtering by location and job type (In Progress).
 
 ## Architecture
 
-The application follows a pragmatic separation of concerns, designed for scalability and maintainability:
+### Project Structure
 
-### Core Framework
-- **Next.js 15 App Router**: Leveraging the latest Next.js features, including nested layouts and server components, located in `src/app/`.
-- **TypeScript**: Strict type safety ensures reliability across the entire codebase.
-
-### State Management & Data Flow
-- **Custom Hooks**: specialized hooks like `useJobs` and `useFavorite` encapsulate data fetching logic and local state management.
-- **Optimistic Updates**: The UI implements optimistic UI patterns (e.g., toggling favorites) to ensure the interface feels instant and responsive, handling rollbacks automatically on error.
-- **Service Layer**: All HTTP communication is centralized in `src/services/`. The `api.ts` module acts as a facade over `fetch`, handling:
-    - Base URL configuration
-    - Automatic `X-API-Key` injection for authentication
-    - Standardized error parsing and handling
-- **Search Strategy**: Client-side debouncing (implemented in `useJobSearch`) minimizes unnecessary API calls during user input.
-
-### Design System
-- **Semantic Styling**: The project uses **Tailwind CSS** with a custom configuration (`tailwind.config.ts`) that defines semantic color tokens (e.g., `primary`, `background.paper`, `status.success`). This abstracts raw color values, making theming and dark mode support seamless and consistent.
-
-### Testing Strategy
-- **Mock Service Worker (MSW)**: Unit tests intercept network requests using MSW handlers (`src/__tests__/mocks/`), allowing reliable testing without a running backend.
-- **Integration Testing**: Dedicated integration tests run against the live API (or can be configured to use mocks) to verify contract implementations.
-
-## Directory Structure
-
-```ascii
+```
 jobs-scraper-app/
-├── public/                 # Static assets
 ├── src/
-│   ├── __tests__/          # Vitest configurations and test files
-│   │   ├── integration/    # Tests running against live/mocked API
-│   │   └── mocks/          # MSW request handlers
-│   ├── app/                # Next.js App Router pages and layouts
-│   ├── components/         # Reusable UI components
-│   ├── hooks/              # Custom React hooks (e.g., usage of services)
-│   ├── services/           # API client layer (Http Client)
-│   ├── styles/             # Global CSS and Tailwind directives
-│   └── types/              # TypeScript interfaces for API responses
-├── .env.local              # Local environment overrides
-├── vitest.config.ts        # Unit test configuration
-└── vitest.integration.config.ts # Integration test configuration
+│   ├── app/                # Next.js App Router pages (Views)
+│   ├── components/         # Reusable UI components (Presentational)
+│   ├── hooks/              # Custom React hooks (Business Logic)
+│   ├── services/           # API client layer (Data Access)
+│   ├── types/              # TypeScript definitions (Domain Model)
+│   └── __tests__/          # Vitest & MSW configurations
+├── public/                 # Static assets
+└── .github/                # CI/CD workflows
 ```
 
-## Environment Variables
+### Component Interaction
 
-Configuration is handled via environment variables.
+```mermaid
+graph TD
+    User[User Interaction] --> Components[React Components]
+    Components --> Hooks[Custom Hooks (useJobs)]
+    Hooks --> Service[Service Layer (jobs.service)]
+    Service --> API[API Client (fetchWrapper)]
+    API --> Backend[External Python API]
 
-| Variable | Default (Fallback) | Description |
-| :--- | :--- | :--- |
-| `NEXT_PUBLIC_API_URL` | `http://127.0.0.1:8000` | Base URL of the Python backend API. |
-| `NEXT_PUBLIC_API_KEY` | `''` | API Key for authenticated endpoints. |
+    subgraph "Frontend State"
+        Hooks
+    end
+```
 
-## Development
+### Core Components
+
+| Component     | Location                       | Responsibility                                         |
+| ------------- | ------------------------------ | ------------------------------------------------------ |
+| `JobsService` | `src/services/jobs.service.ts` | Maps domain operations to API endpoints                |
+| `useJobs`     | `src/hooks/use-jobs.ts`        | Manages job list state and loading lifecycles          |
+| `ApiFacade`   | `src/services/api.ts`          | Centralizes `fetch` calls, headers, and error handling |
+
+## Tech Stack & Patterns
+
+### Tech Stack
+
+| Category   | Technology   | Version | Purpose                                        |
+| ---------- | ------------ | ------- | ---------------------------------------------- |
+| Framework  | Next.js      | 16.0+   | React meta-framework for routing and streaming |
+| UI Library | React        | 19.x    | Component-based UI rendering                   |
+| Styling    | Tailwind CSS | 4.x     | Utility-first CSS styling                      |
+| Icons      | Lucide React | 0.44+   | Consistent icon set                            |
+| Testing    | Vitest       | 4.x     | Fast unit test runner                          |
+| Mocking    | MSW          | 2.x     | Network request interception for tests         |
+
+### Design Patterns
+
+| Pattern           | Implementation              | Rationale                                                     |
+| ----------------- | --------------------------- | ------------------------------------------------------------- |
+| **Facade**        | `src/services/api.ts`       | Hides the complexity of `fetch` configuration / Auth headers. |
+| **Repository**    | `src/services/*.service.ts` | Decouples UI components from specific API endpoints.          |
+| **Optimistic UI** | `src/hooks/use-favorite.ts` | Updates state before server confirmation for better UX.       |
+
+## Getting Started
 
 ### Prerequisites
 
-- Node.js (Latest LTS recommended)
-- pnpm (Project uses `pnpm-lock.yaml`)
-- Running instance of the `jobs-scraper-api` (for full functionality)
+| Requirement | Version | Check Command    |
+| ----------- | ------- | ---------------- |
+| Node.js     | 20+     | `node --version` |
+| pnpm        | 9+      | `pnpm --version` |
+| Python API  | 1.0+    | (See API docs)   |
 
 ### Installation
 
 ```bash
+# Clone repository
+git clone https://github.com/virgotagle/jobs-scraper-app.git
+cd jobs-scraper-app
+
+# Install dependencies
 pnpm install
 ```
 
-### Running the App
+### Configuration
 
-Start the development server:
-
-```bash
-pnpm run dev
-```
-
-The application will be available at `http://localhost:3000`.
-
-## Testing
-
-**Unit Tests**
-Runs tests using MSW to mock network requests. No backend required.
+Create `.env.local` file from example:
 
 ```bash
-pnpm run test:unit
+cp .env .env.local
 ```
 
-**Integration Tests**
-Runs tests against the backend. Ensure `NEXT_PUBLIC_API_URL` points to a running instance.
+| Variable              | Required | Default                 | Description                           |
+| --------------------- | -------- | ----------------------- | ------------------------------------- |
+| `NEXT_PUBLIC_API_URL` | No       | `http://127.0.0.1:8000` | URL of the locally running Python API |
+| `NEXT_PUBLIC_API_KEY` | No       | `''`                    | API Key if backend requires auth      |
+
+### Verify Installation
 
 ```bash
-pnpm run test:integration
+# Run unit tests (Mocked)
+pnpm test:unit
+
+# Expected output:
+# ✓ src/__tests__/unit/jobs.test.tsx (5 tests)
 ```
 
-## Continuous Integration
+## Usage
 
-The project uses **GitHub Actions** for Continuous Integration. The pipeline is defined in `.github/workflows/ci.yml` and is triggered on pushes and pull requests to the `main` branch.
+### Development Server
 
-**Workflow Steps:**
-1.  **Setup**: Configures Node.js 20 and pnpm 9.
-2.  **Lint**: Runs `eslint` to check for code quality issues.
-3.  **Test**: Executes unit tests via `vitest`.
-4.  **Build**: Verifies the application builds successfully with `next build`.
+Start the application in development mode with hot-reloading:
+
+```bash
+pnpm dev
+# App will listen on http://localhost:3000
+```
+
+### Production Build
+
+Create an optimized interaction build:
+
+```bash
+pnpm build
+pnpm start
+```
+
+## Development
+
+### Quality Assurance
+
+| Tool       | Purpose     | Command                  |
+| ---------- | ----------- | ------------------------ |
+| **Vitest** | Unit Tests  | `pnpm test:unit`         |
+| **ESLint** | Linting     | `pnpm lint`              |
+| **MSW**    | API Mocking | Used internally by tests |
+
+**CI Pipeline** (`.github/workflows/ci.yml`):
+
+- Triggers: Push/PR to `main`
+- Stages: `Lint` → `Test` → `Build`
+- Cache: Caches `pnpm` store for faster builds
+
+### Adding a New Feature
+
+**Example: Adding a "Hide Job" button**
+
+1.  **Update Service**: Add method to `src/services/jobs.service.ts`
+    ```typescript
+    hideJob: (jobId: string) => api.post(`/jobs/${jobId}/hide`);
+    ```
+2.  **Create Hook**: Add logic to `src/hooks/use-jobs.ts`
+    ```typescript
+    const hideJob = async (id) => {
+      /* logic */
+    };
+    ```
+3.  **Update Component**: Add button to `JobCard.tsx`
+    ```tsx
+    <button onClick={() => hideJob(job.id)}>Hide</button>
+    ```
+
+## Deployment
+
+### Docker
+
+```bash
+# Build the image
+docker build -t jobs-scraper-app .
+
+# Run container
+docker run -p 3000:3000 -e NEXT_PUBLIC_API_URL="https://api.example.com" jobs-scraper-app
+```
+
+### Vercel (Recommended)
+
+This project is optimized for Vercel. Connect your repository and add the `NEXT_PUBLIC_API_URL` environment variable in the dashboard.
+
+## Troubleshooting
+
+### Common Issues
+
+<details>
+<summary><strong>API Connection Refused</strong></summary>
+
+**Cause**: The backend API is not running or running on a different port.
+
+**Solution**:
+
+1. Ensure the `jobs-scraper-api` is running (`uvcorn src.main:app`).
+2. Verify `NEXT_PUBLIC_API_URL` in `.env.local` matches the backend URL.
+</details>
+
+<details>
+<summary><strong>Typescript Errors on Build</strong></summary>
+
+**Cause**: Mismatched types between frontend and API response.
+
+**Solution**:
+Run `pnpm build` locally before pushing. Check `src/types/` for outdated interfaces.
+
+</details>
 
 ## Gallery
 
@@ -126,3 +257,7 @@ The project uses **GitHub Actions** for Continuous Integration. The pipeline is 
   <img src="./public/app-mobile-home.png" alt="Mobile Home" height="600"/>
   <img src="./public/app-mobile-details.png" alt="Mobile Job Details" height="600"/>
 </div>
+
+## License
+
+This project is licensed under the MIT License - see [LICENSE](LICENSE) for details.
